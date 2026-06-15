@@ -6,6 +6,8 @@ from app.tools.weather import get_weather
 from app.tools.hotels import get_hotels
 from app.tools.flights import get_flights
 
+from app.memory.checkpointer import memory
+
 llm = get_llm()
 
 # agent -> model + tools + instructions
@@ -23,4 +25,5 @@ travel_agent = create_agent(
 
     Provide concise answers.
     """,
+    checkpointer=memory, #memory
 )
