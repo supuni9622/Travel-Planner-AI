@@ -18,7 +18,6 @@ from app.graphs.nodes.itinerary import (
 from app.graphs.nodes.budget import (
     check_budget,
 )
-
 from app.graphs.nodes.revise import (
     revise_plan,
 )
@@ -29,7 +28,16 @@ from app.graphs.nodes.aggregate import aggregate_results
 from app.graphs.nodes.retry import increment_retry
 from app.graphs.nodes.failure import hotel_failure
 from app.graphs.nodes.validation import validate_hotels
+from app.graphs.nodes.approval import (
+    request_approval,
+)
+from app.graphs.nodes.approval_router import (
+    route_approval,
+)
+from langgraph.checkpoint.memory import InMemorySaver
 
+# In memory store - help to keep track on the state when interruption occured
+memory = InMemorySaver()
 # create the builder
 builder = StateGraph(TravelState)
 
@@ -72,6 +80,12 @@ builder.add_node(
 builder.add_node(
     "hotel_failure",
     hotel_failure,
+)
+
+#human in the loop approval
+builder.add_node(
+    "request_approval",
+    request_approval,
 )
 
 #Add edges
@@ -157,9 +171,23 @@ builder.add_conditional_edges(
     },
 )
 
+# builder.add_edge(
+#     "generate",
+#     END,
+# )
+
+#Human in the loop approval
 builder.add_edge(
     "generate",
-    END,
+    "request_approval",
+)
+builder.add_conditional_edges(
+    "request_approval",
+    route_approval,
+    {
+        "approved": END,
+        "revise": "revise",
+    },
 )
 
 builder.add_edge(
@@ -168,5 +196,15 @@ builder.add_edge(
 )
 
 #Compile
-travel_graph = builder.compile()
+# travel_graph = builder.compile()
+
+#Compile your graph with a checkpointer to interrupt in human in the loop
+# Without checkpointing:
+# interrupt() ❌
+
+# With checkpointing:
+# interrupt() ✅
+travel_graph = builder.compile(
+    checkpointer=memory
+)
 

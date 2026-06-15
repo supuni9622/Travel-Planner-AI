@@ -7,8 +7,27 @@ from app.tests.test_memory import test_memory
 from app.graphs.graph import (
     travel_graph,
 )
+from langgraph.types import Command
 
+initial_state = {
+    "destination": "Tokyo",
+    "budget": 2000,
+    "interests": ["anime", "food"],
 
+    "hotels": [],
+    "flights": [],
+    "weather": "",
+
+    "total_cost": 0,
+    "retry_count": 0,
+
+    "itinerary": "",
+    }
+config = {
+        "configurable": {
+        "thread_id": "travel_123"
+        }
+    }
 
 def main():
    
@@ -29,31 +48,30 @@ def main():
     # test_memory()
 
     #6. Langgraph - Run the Graph
-
-    initial_state = {
-    "destination": "Tokyo",
-    "budget": 2000,
-    "interests": ["anime", "food"],
-
-    "hotels": [],
-    "flights": [],
-    "weather": "",
-
-    "total_cost": 0,
-    "retry_count": 0,
-
-    "itinerary": "",
-    }
-    result = travel_graph.invoke(initial_state)
+    result = travel_graph.invoke(initial_state, 
+                                 config=config)
 
     # Observe execusion of sevents of graph
-    for event in travel_graph.stream(initial_state):
+    for event in travel_graph.stream(initial_state, config=config):
         for node_name, updates in event.items():
             print(f"\nNode: {node_name}")
             print(f"Updates: {updates}")
             print("-" * 50)
 
+    # Resume execution after interuption
+    if "__interrupt__" in result:
+        print("Graph paused.")
+
+        user_input = "approve"
+
+        result = travel_graph.invoke(
+            Command(resume=user_input),
+            config=config,
+        )
+
     print(result["itinerary"])
+
+
 
 
 

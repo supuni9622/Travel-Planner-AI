@@ -16,3 +16,4 @@ class TravelState(TypedDict):
     retry_count: int # to prevent infinite loop
 
     itinerary: str
+    approval_status: str
