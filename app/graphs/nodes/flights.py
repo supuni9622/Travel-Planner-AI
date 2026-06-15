@@ -2,7 +2,6 @@ from app.graphs.state import (
     TravelState,
 )
 
-
 def find_flights(
     state: TravelState,
 ):
@@ -13,5 +12,6 @@ def find_flights(
     ]
 
     return {
-        "flights": flights
+        "flights": flights,
+        "total_cost": 650,
     }

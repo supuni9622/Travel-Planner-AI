@@ -32,7 +32,7 @@ def main():
     result = travel_graph.invoke(
         {
             "destination": "Tokyo",
-            "budget": 2000,
+            "budget": 500,
             "interests": ["anime"],
             "hotels": [],
             "flights": [],
