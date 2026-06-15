@@ -32,7 +32,7 @@ def main():
 
     initial_state = {
     "destination": "Tokyo",
-    "budget": 500,
+    "budget": 2000,
     "interests": ["anime", "food"],
 
     "hotels": [],
@@ -40,12 +40,13 @@ def main():
     "weather": "",
 
     "total_cost": 0,
+    "retry_count": 0,
 
     "itinerary": "",
     }
     result = travel_graph.invoke(initial_state)
 
-    # see the events of graph
+    # Observe execusion of sevents of graph
     for event in travel_graph.stream(initial_state):
         for node_name, updates in event.items():
             print(f"\nNode: {node_name}")

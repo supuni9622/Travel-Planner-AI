@@ -13,4 +13,6 @@ class TravelState(TypedDict):
 
     total_cost: int
 
+    retry_count: int # to prevent infinite loop
+
     itinerary: str

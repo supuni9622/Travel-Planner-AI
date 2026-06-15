@@ -26,6 +26,9 @@ from app.graphs.nodes.weather import (
     get_weather,
 )
 from app.graphs.nodes.aggregate import aggregate_results
+from app.graphs.nodes.retry import increment_retry
+from app.graphs.nodes.failure import hotel_failure
+from app.graphs.nodes.validation import validate_hotels
 
 # create the builder
 builder = StateGraph(TravelState)
@@ -59,6 +62,17 @@ builder.add_node(
     get_weather,
 )
 builder.add_node("aggregate_results", aggregate_results)
+
+# Validation and retry nodes
+builder.add_node(
+    "increment_retry",
+    increment_retry,
+)
+
+builder.add_node(
+    "hotel_failure",
+    hotel_failure,
+)
 
 #Add edges
 
@@ -99,7 +113,27 @@ builder.add_edge(
 # )
 
 # Fan-in
-builder.add_edge("find_hotels", "aggregate_results")
+# builder.add_edge("find_hotels", "aggregate_results")
+
+# Add validation and retry for hotel finding failure
+builder.add_conditional_edges(
+    "find_hotels",
+    validate_hotels,
+    {
+        "continue": "aggregate_results",
+        "retry": "increment_retry",
+        "failed": "hotel_failure",
+    },
+)
+builder.add_edge(
+    "increment_retry",
+    "find_hotels",
+)
+builder.add_edge(
+    "hotel_failure",
+    END,
+)
+
 builder.add_edge("find_flights", "aggregate_results")
 builder.add_edge("get_weather", "aggregate_results")
 
