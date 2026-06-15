@@ -1,8 +1,14 @@
 from langchain_core.tools import tool
+from typing import TypedDict
+
+class Flight(TypedDict):
+    flight: str
+    date: str
+    time: str
 
 
 @tool
-def get_flights(origin: str, destination: str) -> str:
+def get_flights(origin: str, destination: str) -> list[Flight]:
     #Why Docstring Matters - The tool description is shown to the LLM.
     #becomes part of the tool schema. Poor descriptions lead to poor tool usage.
     """
