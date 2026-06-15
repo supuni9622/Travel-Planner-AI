@@ -230,6 +230,11 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+## Update requirements file
+```
+pip freeze > requirements.txt
+```
+
 ---
 
 # 🔐 Environment Variables
@@ -246,6 +251,9 @@ GROQ_API_KEY=your_groq_api_key
 
 ```bash
 python3 app/main.py
+```
+```
+python -m app.main
 ```
 
 ---
