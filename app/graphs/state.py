@@ -9,6 +9,8 @@ class TravelState(TypedDict):
     flights: list[str]
     hotels: list[str]
 
+    weather: str
+
     total_cost: int
 
     itinerary: str

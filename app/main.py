@@ -29,16 +29,28 @@ def main():
     # test_memory()
 
     #6. Langgraph - Run the Graph
-    result = travel_graph.invoke(
-        {
-            "destination": "Tokyo",
-            "budget": 500,
-            "interests": ["anime"],
-            "hotels": [],
-            "flights": [],
-            "itinerary": "",
-        }
-    )
+
+    initial_state = {
+    "destination": "Tokyo",
+    "budget": 500,
+    "interests": ["anime", "food"],
+
+    "hotels": [],
+    "flights": [],
+    "weather": "",
+
+    "total_cost": 0,
+
+    "itinerary": "",
+    }
+    result = travel_graph.invoke(initial_state)
+
+    # see the events of graph
+    for event in travel_graph.stream(initial_state):
+        for node_name, updates in event.items():
+            print(f"\nNode: {node_name}")
+            print(f"Updates: {updates}")
+            print("-" * 50)
 
     print(result["itinerary"])
 

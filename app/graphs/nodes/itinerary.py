@@ -2,19 +2,21 @@ from app.graphs.state import (
     TravelState,
 )
 
-
 def generate_itinerary(
     state: TravelState,
 ):
     itinerary = f"""
-Destination: {state["destination"]}
+    Destination: {state["destination"]}
 
-Flights:
-{state["flights"]}
+    Weather:
+        {state["weather"]}
 
-Hotels:
-{state["hotels"]}
-"""
+    Flights:
+        {state["flights"]}
+
+    Hotels:
+        {state["hotels"]}
+    """
 
     return {
         "itinerary": itinerary

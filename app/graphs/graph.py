@@ -22,6 +22,10 @@ from app.graphs.nodes.budget import (
 from app.graphs.nodes.revise import (
     revise_plan,
 )
+from app.graphs.nodes.weather import (
+    get_weather,
+)
+from app.graphs.nodes.aggregate import aggregate_results
 
 # create the builder
 builder = StateGraph(TravelState)
@@ -50,16 +54,38 @@ builder.add_node(
     "generate",
     generate_itinerary,
 )
+builder.add_node(
+    "get_weather",
+    get_weather,
+)
+builder.add_node("aggregate_results", aggregate_results)
 
 #Add edges
+
+# builder.add_edge(
+#     START,
+#     "find_hotels",
+# )
+
+# builder.add_edge(
+#     "find_hotels",
+#     "find_flights",
+# )
+
+#Create Fan-Out
 builder.add_edge(
     START,
     "find_hotels",
 )
 
 builder.add_edge(
-    "find_hotels",
+    START,
     "find_flights",
+)
+
+builder.add_edge(
+    START,
+    "get_weather",
 )
 
 # builder.add_edge(
@@ -72,11 +98,24 @@ builder.add_edge(
 #     END,
 # )
 
-
+# Fan-in
+builder.add_edge("find_hotels", "aggregate_results")
+builder.add_edge("find_flights", "aggregate_results")
+builder.add_edge("get_weather", "aggregate_results")
 
 # Adding conditional edges instead of lineor workflow
+# builder.add_conditional_edges(
+#     "find_flights",
+#     check_budget,
+#     {
+#         "generate": "generate",
+#         "revise": "revise",
+#     },
+# )
+
+# Conditional routing in parallel workflow
 builder.add_conditional_edges(
-    "find_flights",
+    "aggregate_results",
     check_budget,
     {
         "generate": "generate",
