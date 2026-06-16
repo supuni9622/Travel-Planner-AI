@@ -4,6 +4,7 @@ from typing import Annotated
 
 #graph schema
 class TravelState(TypedDict):
+    user_query: str
     destination: str
     budget: int
     interests: list[str]
@@ -24,3 +25,4 @@ class TravelState(TypedDict):
         list[str],
         add,
     ]
+    next_agents: list[str] #Supervisor -executer pattern 

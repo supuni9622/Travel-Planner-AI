@@ -70,3 +70,15 @@ builder.add_edge(
 )
 
 itinerary_graph = builder.compile()
+
+
+def run_itinerary_agent(state):
+    result = itinerary_graph.invoke(state)
+
+    return {
+        "itinerary": result["itinerary"],
+        "approval_status": result.get(
+            "approval_status",
+            "",
+        ),
+    }

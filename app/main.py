@@ -7,8 +7,11 @@ from app.tests.test_memory import test_memory
 # from app.graphs.graph_single import (
 #     travel_graph,
 # )
-from app.graphs.graph import (travel_graph)
+# from app.graphs.graph import (travel_graph)
 from langgraph.types import Command
+
+#supervisor -executer pattern
+from app.graphs.supervisor_graph import (travel_graph)
 
 initial_state = {
     "destination": "Tokyo",
@@ -23,7 +26,9 @@ initial_state = {
     "retry_count": 0,
 
     "itinerary": "",
-    "warnings": []
+    "warnings": [],
+    "next_agents": [],
+    "user_query": "Plan my Tokyo trip"
     }
 config = {
         "configurable": {
@@ -82,7 +87,7 @@ def main():
     # for snapshot in history:
     #     print(snapshot.values)
 
-    print(result["warnings"])
+    print(result)
 
 
 if __name__ == "__main__":
