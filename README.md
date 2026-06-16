@@ -256,6 +256,54 @@ python3 app/main.py
 python -m app.main
 ```
 
+# Set up progressql
+Step 1: Verify Docker
+```
+docker --version
+```
+
+If Docker isn't installed:
+
+Docker Desktop for Mac
+
+Install and start Docker Desktop.
+
+Step 2: Run PostgreSQL
+```
+docker run --name travel-postgres \
+  -e POSTGRES_USER=travel_user \
+  -e POSTGRES_PASSWORD=travel_password \
+  -e POSTGRES_DB=travel_ai \
+  -p 5432:5432 \
+  -d postgres:17
+```
+Verify:
+```
+docker ps
+```
+
+You should see:
+
+travel-postgres
+
+Test Connection
+```
+psql postgresql://travel_user:travel_password@localhost:5432/travel_ai
+
+Expected:
+
+travel_ai=#
+
+Exit:
+```
+\q
+```
+
+## Start persitant memory - progressql
+```
+python -m app.memory.setup
+```
+
 ---
 
 # 🗺️ Learning Roadmap

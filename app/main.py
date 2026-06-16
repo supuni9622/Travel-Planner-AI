@@ -69,7 +69,14 @@ def main():
             config=config,
         )
 
-    print(result["itinerary"])
+    # print(result["itinerary"])
+
+    # Inspect Saved State
+    snapshot = travel_graph.get_state(config)
+    print(snapshot.values)
+    # history = travel_graph.get_state_history(config)
+    # for snapshot in history:
+    #     print(snapshot.values)
 
 
 

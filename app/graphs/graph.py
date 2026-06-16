@@ -35,6 +35,7 @@ from app.graphs.nodes.approval_router import (
     route_approval,
 )
 from langgraph.checkpoint.memory import InMemorySaver
+from app.memory.checkpointer import checkpointer
 
 # In memory store - help to keep track on the state when interruption occured
 memory = InMemorySaver()
@@ -204,7 +205,12 @@ builder.add_edge(
 
 # With checkpointing:
 # interrupt() ✅
+# travel_graph = builder.compile(
+#     checkpointer=memory
+# )
+
+# With peristant memory
 travel_graph = builder.compile(
-    checkpointer=memory
+    checkpointer=checkpointer
 )
 
