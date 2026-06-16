@@ -23,6 +23,7 @@ initial_state = {
     "retry_count": 0,
 
     "itinerary": "",
+    "warnings": []
     }
 config = {
         "configurable": {
@@ -54,7 +55,7 @@ def main():
 
     # Observe execusion of sevents of graph
     # Important - we should use either invoke or stream - not both together
-    
+
     # for event in travel_graph.stream(initial_state, config=config):
     #     for node_name, updates in event.items():
     #         print(f"\nNode: {node_name}")
@@ -80,6 +81,8 @@ def main():
     # history = travel_graph.get_state_history(config)
     # for snapshot in history:
     #     print(snapshot.values)
+
+    print(result["warnings"])
 
 
 if __name__ == "__main__":

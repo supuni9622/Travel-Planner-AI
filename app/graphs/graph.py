@@ -27,6 +27,14 @@ from app.memory.checkpointer import (
 )
 from langgraph.checkpoint.memory import InMemorySaver
 
+from app.graphs.nodes.flight_warning import (
+    flight_warning,
+)
+
+from app.graphs.nodes.weather_warning import (
+    weather_warning,
+)
+
 
 builder = StateGraph(TravelState)
 memory = InMemorySaver()
@@ -52,6 +60,16 @@ builder.add_node(
     itinerary_graph,
 )
 
+builder.add_node(
+    "flight_warning",
+    flight_warning,
+)
+
+builder.add_node(
+    "weather_warning",
+    weather_warning,
+)
+
 # Fan-out
 builder.add_edge(
     START,
@@ -68,6 +86,16 @@ builder.add_edge(
     "weather_agent",
 )
 
+builder.add_edge(
+    START,
+    "flight_warning",
+)
+
+builder.add_edge(
+    START,
+    "weather_warning",
+)
+
 # Fan-in
 builder.add_edge(
     "flight_agent",
@@ -81,6 +109,15 @@ builder.add_edge(
 
 builder.add_edge(
     "weather_agent",
+    "itinerary_agent",
+)
+builder.add_edge(
+    "flight_warning",
+    "itinerary_agent",
+)
+
+builder.add_edge(
+    "weather_warning",
     "itinerary_agent",
 )
 

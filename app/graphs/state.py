@@ -1,4 +1,6 @@
 from typing import TypedDict
+from operator import add
+from typing import Annotated
 
 #graph schema
 class TravelState(TypedDict):
@@ -17,3 +19,8 @@ class TravelState(TypedDict):
 
     itinerary: str
     approval_status: str
+
+    warnings: Annotated[ #reducers - supports multiple writers.
+        list[str],
+        add,
+    ]

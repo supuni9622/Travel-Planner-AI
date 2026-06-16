@@ -5,6 +5,12 @@ from app.graphs.state import (
 def generate_itinerary(
     state: TravelState,
 ):
+    
+    warnings = "\n".join(
+        f"- {warning}"
+        for warning in state["warnings"]
+    )
+
     itinerary = f"""
     Destination: {state["destination"]}
 
@@ -13,6 +19,10 @@ def generate_itinerary(
 
     Flights:
         {state["flights"]}
+    
+    Warnings:
+        {warnings}
+
 
     Hotels:
         {state["hotels"]}
