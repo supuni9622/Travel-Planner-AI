@@ -74,6 +74,21 @@ builder.add_conditional_edges(
 
 builder.add_edge(
     "flight_agent",
+    "itinerary_agent",
+)
+
+builder.add_edge(
+    "hotel_agent",
+    "itinerary_agent",
+)
+
+builder.add_edge(
+    "weather_agent",
+    "itinerary_agent",
+)
+
+builder.add_edge(
+    "flight_agent",
     END,
 )
 
