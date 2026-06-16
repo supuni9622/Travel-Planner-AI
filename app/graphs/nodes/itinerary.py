@@ -10,6 +10,10 @@ def generate_itinerary(
         f"- {warning}"
         for warning in state["warnings"]
     )
+    critique = state.get(
+        "critique",
+        ""
+    )
 
     itinerary = f"""
     Destination: {state["destination"]}
@@ -26,8 +30,13 @@ def generate_itinerary(
 
     Hotels:
         {state["hotels"]}
+    Previous critique:
+        {critique}
     """
 
     return {
         "itinerary": itinerary
     }
+
+# In production:
+# Pass critique to the LLM prompt.

@@ -26,3 +26,9 @@ class TravelState(TypedDict):
         add,
     ]
     next_agents: list[str] #Supervisor -executer pattern 
+
+    critique: str #for reflection pattern
+
+    reflection_count: int #for reflection pattern
+
+    max_reflections: int #for reflection pattern

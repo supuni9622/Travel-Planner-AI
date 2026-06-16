@@ -12,7 +12,9 @@ from app.graphs.nodes.itinerary import generate_itinerary
 from app.graphs.nodes.revise import revise_plan
 from app.graphs.nodes.approval import request_approval
 from app.graphs.nodes.approval_router import route_approval
-
+from app.graphs.nodes.critic import critique_itinerary
+from app.graphs.nodes.increment_reflection import increment_reflection
+from app.graphs.nodes.reflection_router import route_reflection
 
 builder = StateGraph(TravelState)
 
@@ -36,6 +38,16 @@ builder.add_node(
     request_approval,
 )
 
+builder.add_node(
+    "critic",
+    critique_itinerary,
+)
+
+builder.add_node(
+    "increment_reflection",
+    increment_reflection,
+)
+
 builder.add_edge(
     START,
     "aggregate_results",
@@ -49,10 +61,30 @@ builder.add_conditional_edges(
         "revise": "revise",
     },
 )
+# Since we do critic now
+# builder.add_edge(
+#     "generate",
+#     "request_approval",
+# )
 
 builder.add_edge(
     "generate",
-    "request_approval",
+    "critic",
+)
+
+builder.add_conditional_edges(
+    "critic",
+    route_reflection,
+    {
+        "approved": "request_approval",
+        "revise": "increment_reflection",
+        "human_review": "request_approval",
+    },
+)
+
+builder.add_edge(
+    "increment_reflection",
+    "generate",
 )
 
 builder.add_conditional_edges(
@@ -75,10 +107,15 @@ itinerary_graph = builder.compile()
 def run_itinerary_agent(state):
     result = itinerary_graph.invoke(state)
 
+    allowed_keys = {
+        "itinerary",
+        "critique",
+        "reflection_count",
+        "approval_status",
+    }
+
     return {
-        "itinerary": result["itinerary"],
-        "approval_status": result.get(
-            "approval_status",
-            "",
-        ),
+        key: value
+        for key, value in result.items()
+        if key in allowed_keys
     }

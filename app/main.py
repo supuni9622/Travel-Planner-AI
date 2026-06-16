@@ -28,7 +28,12 @@ initial_state = {
     "itinerary": "",
     "warnings": [],
     "next_agents": [],
-    "user_query": "Plan my Tokyo trip"
+    "user_query": "Plan my Tokyo trip",
+    "critique": "",
+
+    "reflection_count": 0,
+
+    "max_reflections": 2,
     }
 config = {
         "configurable": {
