@@ -3,14 +3,43 @@ from langgraph.graph import (
     END,
     StateGraph,
 )
-from app.graphs.state import (
-    TravelState,
-)
-from app.graphs.nodes.hotels import (
-    find_hotels,
-)
 
-hotel_builder = StateGraph(TravelState)
+from app.graphs.state import TravelState
+
+from app.tools.hotels import get_hotels
+
+
+def find_hotels(
+    state: TravelState,
+):
+    advice = state.get(
+        "travel_advice",
+        []
+    )
+
+    hotels = get_hotels.invoke(
+        {
+            "city": state["destination"]
+        }
+    )
+
+    if any(
+        "public transportation" in tip.lower()
+        for tip in advice
+    ):
+        hotels = [
+            f"{hotel} (Near subway)"
+            for hotel in hotels
+        ]
+
+    return {
+        "hotels": hotels
+    }
+
+
+hotel_builder = StateGraph(
+    TravelState
+)
 
 hotel_builder.add_node(
     "find_hotels",
@@ -29,14 +58,14 @@ hotel_builder.add_edge(
 
 hotel_graph = hotel_builder.compile()
 
-#Nodes return only the changes but graphs return the whole state
-# In parallel execusion this lead to conflicts 
-# Quick fix -> convert the subgrpah into node
-# Long term fix -> manage seperate states for subgraphs and merge later
 
-def run_hotel_agent(state):
-    result = hotel_graph.invoke(state)
+def run_hotel_agent(
+    state: TravelState,
+):
+    result = hotel_graph.invoke(
+        state
+    )
 
     return {
-        "hotels": result["hotels"],
+        "hotels": result["hotels"]
     }

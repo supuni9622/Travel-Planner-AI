@@ -43,3 +43,12 @@ class TravelState(TypedDict):
     tasks: list[Task] # for planner-executer pattern
 
     current_task_index: int # for planner-executer pattern
+
+    travel_advice: Annotated[ # for shared context for multi agent colloboration
+    list[str],
+    add,
+    ]
+
+    retrieved_context: str #retrieval node owns retrieved_context
+
+    

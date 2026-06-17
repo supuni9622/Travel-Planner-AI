@@ -16,6 +16,8 @@ from app.graphs.nodes.critic import critique_itinerary
 from app.graphs.nodes.increment_reflection import increment_reflection
 from app.graphs.nodes.reflection_router import route_reflection
 
+from app.models.llm import get_llm
+
 builder = StateGraph(TravelState)
 
 builder.add_node(
@@ -103,19 +105,100 @@ builder.add_edge(
 
 itinerary_graph = builder.compile()
 
+#Deterministic formatting logic
 
-def run_itinerary_agent(state):
-    result = itinerary_graph.invoke(state)
+# def run_itinerary_agent(state):
+#     result = itinerary_graph.invoke(state)
 
-    allowed_keys = {
-        "itinerary",
-        "critique",
-        "reflection_count",
-        "approval_status",
-    }
+#     allowed_keys = {
+#         "itinerary",
+#         "critique",
+#         "reflection_count",
+#         "approval_status",
+#     }
+
+#     return {
+#         key: value
+#         for key, value in result.items()
+#         if key in allowed_keys
+#     }
+
+
+#Deterministic formatting logic
+
+# def generate_itinerary(
+#     state: TravelState,
+# ):
+#     advice = "\n".join(
+#         f"- {item}"
+#         for item in state["travel_advice"]
+#     )
+
+#     itinerary = f"""
+#         Destination: {state["destination"]}
+
+#         Advice:
+#         {advice}
+
+#         Flights:
+#         {state["flights"]}
+
+#         Hotels:
+#         {state["hotels"]}
+
+#         Weather:
+#         {state["weather"]}
+#         """
+
+#     return {
+#         "itinerary": itinerary
+#     }
+
+# With RAG context
+
+
+def generate_itinerary(
+    state: TravelState,
+):
+    llm = get_llm()
+
+    context = state.get(
+        "retrieved_context",
+        ""
+    )
+
+    advice = "\n".join(
+        f"- {item}"
+        for item in state["travel_advice"]
+    )
+
+    prompt = f"""
+    Use the travel information below to create a personalized itinerary.
+
+    Retrieved Context:
+    {context}
+
+    Destination:
+    {state["destination"]}
+
+    Interests:
+    {", ".join(state["interests"])}
+
+    Travel Advice:
+    {advice}
+
+    Flights:
+    {state["flights"]}
+
+    Hotels:
+    {state["hotels"]}
+
+    Weather:
+    {state["weather"]}
+    """
+
+    response = llm.invoke(prompt)
 
     return {
-        key: value
-        for key, value in result.items()
-        if key in allowed_keys
+        "itinerary": response.content
     }

@@ -24,7 +24,13 @@ from langgraph.types import Command
 # from app.graphs.llm_planner_graph import (travel_graph)
 
 # supervisor-executer pattern with llm-powered sub-agent selecting instead of rule based selecting in the code
-from app.graphs.llm_supervisor_graph import (travel_graph)
+#from app.graphs.llm_supervisor_graph import (travel_graph)
+
+# for shared state for multi agent communication
+# from app.graphs.shared_state_graph import (travel_graph)
+
+# for RAG in the flow
+from app.graphs.rag_graph import (travel_graph)
 
 initial_state = {
     "destination": "Tokyo",
@@ -48,7 +54,9 @@ initial_state = {
 
     "max_reflections": 2,
     "tasks":[],
-    "current_task_index":0
+    "current_task_index":0,
+    "travel_advice": [], #for shared state
+    "retrieved_context": "" # for rag
     }
 config = {
         "configurable": {
@@ -87,16 +95,17 @@ def main():
     #         print(f"Updates: {updates}")
     #         print("-" * 50)
 
-    # Resume execution after interuption
-    if "__interrupt__" in result:
-        print("Graph paused.")
 
-        user_input = "approve"
+        # Resume execution after interuption
+        # if "__interrupt__" in result:
+        #     print("Graph paused.")
 
-        result = travel_graph.invoke(
-            Command(resume=user_input),
-            config=config,
-        )
+        #     user_input = "approve"
+
+        # result = travel_graph.invoke(
+        #     Command(resume=user_input),
+        #     config=config,
+        # )
 
     # print(result["itinerary"])
 

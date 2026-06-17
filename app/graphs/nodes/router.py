@@ -14,6 +14,7 @@ def route_agents(state: TravelState):
         if agent in VALID_AGENTS
     ]
 
-    return {
-        "next_agents": agents
-    }
+    # return {
+    #     "next_agents": agents
+    # }
+    return state["next_agents"]

@@ -308,8 +308,12 @@ Exit:
 ```
 python -m app.memory.setup
 ```
-
 ---
+
+# Ingest files to RAG
+```
+python -m app.rag.ingest
+```
 
 # 🗺️ Learning Roadmap
 

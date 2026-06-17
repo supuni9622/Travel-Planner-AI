@@ -37,6 +37,16 @@ weather_graph = weather_builder.compile()
 def run_weather_agent(state):
     result = weather_graph.invoke(state)
 
+    advice = []
+
+    weather = result["weather"].lower()
+
+    if "rain" in weather:
+        advice.append(
+            "Choose hotels near public transportation."
+        )
+
     return {
         "weather": result["weather"],
+        "travel_advice": advice,
     }
