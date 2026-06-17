@@ -11,7 +11,17 @@ from app.tests.test_memory import test_memory
 from langgraph.types import Command
 
 #supervisor -executer pattern
-from app.graphs.supervisor_graph import (travel_graph)
+# supervisor check and decide who should do the tasks
+#Parallel specialists
+# from app.graphs.supervisor_graph import (travel_graph)
+
+#planner-executer pattern 
+# planner check and decide what are the sub-tasks to complete the requested task
+#Dynamic sequential tasks
+# from app.graphs.planner_graph import (travel_graph)
+
+# planner-executer pattern with llm-powered planning instead of rule based planning in the code
+from app.graphs.llm_planner_graph import (travel_graph)
 
 initial_state = {
     "destination": "Tokyo",
@@ -28,12 +38,14 @@ initial_state = {
     "itinerary": "",
     "warnings": [],
     "next_agents": [],
-    "user_query": "Plan my Tokyo trip",
+    "user_query": "Plan my Tokyo trip i want to experince sakura",
     "critique": "",
 
     "reflection_count": 0,
 
     "max_reflections": 2,
+    "tasks":[],
+    "current_task_index":0
     }
 config = {
         "configurable": {

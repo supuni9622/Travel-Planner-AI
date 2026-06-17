@@ -268,7 +268,7 @@ Docker Desktop for Mac
 
 Install and start Docker Desktop.
 
-Step 2: Run PostgreSQL
+Step 2: Run PostgreSQL - only once in initial setup
 ```
 docker run --name travel-postgres \
   -e POSTGRES_USER=travel_user \
@@ -276,6 +276,11 @@ docker run --name travel-postgres \
   -e POSTGRES_DB=travel_ai \
   -p 5432:5432 \
   -d postgres:17
+```
+
+Start docker container 
+```
+docker start travel-postgres
 ```
 Verify:
 ```

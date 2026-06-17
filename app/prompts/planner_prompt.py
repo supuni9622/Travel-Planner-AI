@@ -1,6 +1,6 @@
 from langchain_core.prompts import ChatPromptTemplate
 
-
+# This prompt is created to simple task planning 
 planner_prompt = ChatPromptTemplate.from_messages(
     [
         (

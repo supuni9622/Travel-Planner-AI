@@ -2,6 +2,13 @@ from typing import TypedDict
 from operator import add
 from typing import Annotated
 
+# For planner-executer pattern
+class Task(TypedDict):
+    id: int
+    task: str
+    reason: str
+    status: str
+
 #graph schema
 class TravelState(TypedDict):
     user_query: str
@@ -32,3 +39,7 @@ class TravelState(TypedDict):
     reflection_count: int #for reflection pattern
 
     max_reflections: int #for reflection pattern
+ 
+    tasks: list[Task] # for planner-executer pattern
+
+    current_task_index: int # for planner-executer pattern
