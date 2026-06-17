@@ -1,0 +1,18 @@
+{
+  "interests": [
+    "anime",
+    "food"
+  ],
+  "preferred_budget": 2000,
+  "destination": "Tokyo",
+  "favorite_season": "spring",
+  "preferred_hotel_type": "near subway",
+  "visited_destinations": [
+    "Tokyo"
+  ],
+  "budget_history": [
+    2000,
+    2000
+  ],
+  "average_budget": 2000.0
+}

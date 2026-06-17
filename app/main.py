@@ -30,7 +30,10 @@ from langgraph.types import Command
 # from app.graphs.shared_state_graph import (travel_graph)
 
 # for RAG in the flow
-from app.graphs.rag_graph import (travel_graph)
+# from app.graphs.rag_graph import (travel_graph)
+
+#with long-term memory /user profiles
+from app.graphs.long_memory_graph import (travel_graph)
 
 initial_state = {
     "destination": "Tokyo",
@@ -47,7 +50,7 @@ initial_state = {
     "itinerary": "",
     "warnings": [],
     "next_agents": [],
-    "user_query": "Plan my Tokyo trip i want to experince sakura",
+    "user_query": "Plan another Japan trip. I want to go in spring season",
     "critique": "",
 
     "reflection_count": 0,
@@ -56,12 +59,30 @@ initial_state = {
     "tasks":[],
     "current_task_index":0,
     "travel_advice": [], #for shared state
-    "retrieved_context": "" # for rag
+    "retrieved_context": "", # for rag
+     "user_id": "user_123",
+
+    "user_profile": {},
+
+    "memories": [],
+     "preferred_hotel_type": "near subway",
+    "favorite_season": "spring",
     }
+
+#metadata and tags can be used for langsmith tracing 
 config = {
         "configurable": {
-        "thread_id": "travel_123"
-        }
+        "thread_id": "travel_124"
+        },
+        "metadata": {
+        "user_id": "user_123",
+        "environment": "development"
+        },
+        "tags": [
+        "rag",
+        "travel-agent",
+        "development"
+    ]
     }
 
 def main():
@@ -107,16 +128,18 @@ def main():
         #     config=config,
         # )
 
-    # print(result["itinerary"])
-
     # Inspect Saved State
     snapshot = travel_graph.get_state(config)
+    print("snap shot -------------------------------")
     print(snapshot.values)
     # history = travel_graph.get_state_history(config)
     # for snapshot in history:
     #     print(snapshot.values)
 
+    print("===================== result ===================")
     print(result)
+    print("============= itenary =============================")
+    print(result["itinerary"])
 
 
 if __name__ == "__main__":

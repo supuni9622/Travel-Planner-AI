@@ -172,8 +172,16 @@ def generate_itinerary(
         for item in state["travel_advice"]
     )
 
+    profile = state.get(
+    "user_profile",
+    {}
+)
+
     prompt = f"""
     Use the travel information below to create a personalized itinerary.
+
+    User Preferences:
+    {profile}
 
     Retrieved Context:
     {context}

@@ -51,4 +51,12 @@ class TravelState(TypedDict):
 
     retrieved_context: str #retrieval node owns retrieved_context
 
-    
+    user_id: str #long term memory
+
+    user_profile: dict 
+    memories: list[str]
+
+    preferred_hotel_type: str
+    favorite_season: str
+
+
