@@ -21,7 +21,10 @@ from langgraph.types import Command
 # from app.graphs.planner_graph import (travel_graph)
 
 # planner-executer pattern with llm-powered planning instead of rule based planning in the code
-from app.graphs.llm_planner_graph import (travel_graph)
+# from app.graphs.llm_planner_graph import (travel_graph)
+
+# supervisor-executer pattern with llm-powered sub-agent selecting instead of rule based selecting in the code
+from app.graphs.llm_supervisor_graph import (travel_graph)
 
 initial_state = {
     "destination": "Tokyo",
