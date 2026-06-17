@@ -1,0 +1,43 @@
+services:
+  api:
+    build: .
+    container_name: travel-ai-api
+
+    ports:
+      - "8000:8000"
+
+    env_file:
+      - .env
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:17
+
+    container_name: travel-ai-postgres
+
+    environment:
+      POSTGRES_USER: travel_user
+      POSTGRES_PASSWORD: travel_password
+      POSTGRES_DB: travel_ai
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d travel_ai"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

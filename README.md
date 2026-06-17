@@ -282,6 +282,7 @@ Start docker container
 ```
 docker start travel-postgres
 ```
+
 Verify:
 ```
 docker ps
@@ -294,6 +295,7 @@ travel-postgres
 Test Connection
 ```
 psql postgresql://travel_user:travel_password@localhost:5432/travel_ai
+```
 
 Expected:
 
@@ -308,12 +310,99 @@ Exit:
 ```
 python -m app.memory.setup
 ```
----
 
 # Ingest files to RAG
 ```
 python -m app.rag.ingest
 ```
+
+
+# Run fastapi app
+```
+uvicorn app.api.app:app --reload
+```
+
+# Run the application using docker
+
+## build the dockerfile
+```
+docker build -t travel-ai .
+```
+
+## Run using docker
+```
+docker run -p 8000:8000 travel-ai
+```
+
+# Use docker compose becuase we need to use local host for both progress and main app but we cannot do it when we use onluy dockerfile
+
+## build compose
+```
+docker compose build --no-cache
+```
+
+## start the applicaiton
+```
+docker compose up
+```
+
+## or run in background 
+```
+docker compose up -d
+```
+
+## Verify containers
+```
+docker compose ps
+```
+
+## check logs
+
+API
+```
+docker compose logs -f api
+```
+Postgres
+```
+docker compose logs -f postgres
+```
+
+## Stop everything
+```
+docker compose down
+```
+
+### Stop and delete PostgreSQL data
+```
+docker compose down -v
+```
+Be careful with -v because it deletes the database volume.
+
+## In case we need to stop ports
+stop the process using port 5432
+
+Find what's using it:
+
+lsof -i :5432
+
+Example output:
+
+COMMAND     PID   USER
+postgres   1234  supunimanamperi
+
+Stop it:
+
+brew services stop postgresql
+
+or:
+
+docker ps
+docker stop <container_id>
+
+Then rerun:
+
+docker compose up
+
 
 # 🗺️ Learning Roadmap
 
