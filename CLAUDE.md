@@ -28,7 +28,19 @@ python -m app.memory.setup
 python -m app.rag.ingest
 ```
 
-### Run tests (manual invocation — no test runner configured)
+### Run tests
+```bash
+# All API endpoint tests
+pytest app/tests/test_api.py -v
+
+# All tests
+pytest
+
+# Single test class
+pytest app/tests/test_api.py::TestPlanEndpoint -v
+```
+
+Other test scripts (manual invocation, no assertions):
 ```bash
 python -m app.tests.test_agents
 python -m app.tests.test_memory
