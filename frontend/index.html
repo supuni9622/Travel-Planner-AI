@@ -18,6 +18,7 @@
       --text: #e8eaf0;
       --muted: #8b90a8;
       --success: #34d399;
+      --warning: #fbbf24;
       --radius: 12px;
     }
 
@@ -40,9 +41,7 @@
       gap: 14px;
     }
 
-    .logo {
-      font-size: 28px;
-    }
+    .logo { font-size: 28px; }
 
     .header-text h1 {
       font-size: 1.4rem;
@@ -101,8 +100,7 @@
 
     input[type="text"],
     input[type="number"],
-    textarea,
-    select {
+    textarea {
       background: var(--surface2);
       border: 1px solid var(--border);
       border-radius: 8px;
@@ -128,7 +126,6 @@
     .budget-row {
       display: flex;
       align-items: center;
-      gap: 8px;
     }
 
     .budget-prefix {
@@ -158,9 +155,7 @@
       cursor: text;
     }
 
-    .tags-container:focus-within {
-      border-color: var(--accent);
-    }
+    .tags-container:focus-within { border-color: var(--accent); }
 
     .tag {
       display: flex;
@@ -210,7 +205,6 @@
     .mode-toggle {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 0;
       background: var(--surface2);
       border: 1px solid var(--border);
       border-radius: 8px;
@@ -317,6 +311,7 @@
       align-items: center;
       justify-content: space-between;
       background: var(--surface);
+      flex-shrink: 0;
     }
 
     .result-header h2 {
@@ -327,6 +322,28 @@
       letter-spacing: 0.08em;
     }
 
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .copy-btn {
+      display: none;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .copy-btn.visible { display: block; }
+
     .status-badge {
       font-size: 0.75rem;
       padding: 3px 10px;
@@ -334,26 +351,10 @@
       font-weight: 500;
     }
 
-    .status-idle {
-      background: rgba(139, 144, 168, 0.15);
-      color: var(--muted);
-    }
-
-    .status-loading {
-      background: rgba(79, 142, 247, 0.15);
-      color: var(--accent);
-      animation: pulse 1.5s infinite;
-    }
-
-    .status-done {
-      background: rgba(52, 211, 153, 0.15);
-      color: var(--success);
-    }
-
-    .status-error {
-      background: rgba(248, 113, 113, 0.15);
-      color: #f87171;
-    }
+    .status-idle  { background: rgba(139,144,168,.15); color: var(--muted); }
+    .status-loading { background: rgba(79,142,247,.15); color: var(--accent); animation: pulse 1.5s infinite; }
+    .status-done  { background: rgba(52,211,153,.15); color: var(--success); }
+    .status-error { background: rgba(248,113,113,.15); color: #f87171; }
 
     @keyframes pulse {
       0%, 100% { opacity: 1; }
@@ -378,10 +379,7 @@
       text-align: center;
     }
 
-    .empty-state .icon {
-      font-size: 56px;
-      opacity: 0.4;
-    }
+    .empty-state .icon { font-size: 56px; opacity: 0.4; }
 
     .empty-state h3 {
       font-size: 1.1rem;
@@ -394,6 +392,78 @@
       font-size: 0.85rem;
       max-width: 320px;
       line-height: 1.6;
+    }
+
+    /* Agent progress pipeline */
+    .pipeline {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      margin-bottom: 24px;
+    }
+
+    .pipeline-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 8px;
+    }
+
+    .pipeline-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 0;
+      font-size: 0.83rem;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+
+    .step-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .step.pending .step-icon { border-color: var(--border); color: var(--muted); }
+
+    .step.active  .step-icon {
+      border-color: var(--accent);
+      background: rgba(79,142,247,.15);
+      animation: spin-pulse 1s ease-in-out infinite;
+    }
+
+    .step.done .step-icon {
+      border-color: var(--success);
+      background: rgba(52,211,153,.15);
+      color: var(--success);
+    }
+
+    .step.done { color: var(--text); }
+    .step.active { color: var(--accent); }
+
+    @keyframes spin-pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
     }
 
     /* Markdown output */
@@ -415,7 +485,6 @@
       border-bottom: 1px solid var(--border);
     }
     .itinerary h3 { font-size: 1rem; color: var(--accent); }
-
     .itinerary p { margin-bottom: 0.8em; color: var(--text); }
 
     .itinerary ul, .itinerary ol {
@@ -424,7 +493,6 @@
     }
 
     .itinerary li { margin-bottom: 0.3em; }
-
     .itinerary strong { color: var(--text); font-weight: 600; }
 
     .itinerary code {
@@ -448,26 +516,10 @@
       margin: 1.5em 0;
     }
 
-    /* Cursor blink for streaming */
-    .cursor {
-      display: inline-block;
-      width: 2px;
-      height: 1em;
-      background: var(--accent);
-      margin-left: 2px;
-      vertical-align: middle;
-      animation: blink 0.8s step-end infinite;
-    }
-
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
-    }
-
     /* Error box */
     .error-box {
-      background: rgba(248, 113, 113, 0.08);
-      border: 1px solid rgba(248, 113, 113, 0.3);
+      background: rgba(248,113,113,.08);
+      border: 1px solid rgba(248,113,113,.3);
       border-radius: 8px;
       padding: 16px 20px;
       color: #f87171;
@@ -480,10 +532,7 @@
         grid-template-columns: 1fr;
         height: auto;
       }
-
-      .result-panel {
-        min-height: 60vh;
-      }
+      .result-panel { min-height: 60vh; }
     }
   </style>
 </head>
@@ -493,7 +542,7 @@
   <div class="logo">✈️</div>
   <div class="header-text">
     <h1>Travel Planner AI</h1>
-    <p>Powered by LangGraph &amp; Claude</p>
+    <p>Powered by LangGraph &amp; Groq</p>
   </div>
 </header>
 
@@ -568,7 +617,7 @@
       Generate Itinerary
     </button>
 
-    <button class="btn btn-secondary" id="clear-btn" onclick="handleClear()">
+    <button class="btn btn-secondary" onclick="handleClear()">
       Clear
     </button>
   </div>
@@ -577,7 +626,10 @@
   <div class="result-panel">
     <div class="result-header">
       <h2>Itinerary</h2>
-      <span class="status-badge status-idle" id="status-badge">Idle</span>
+      <div class="header-right">
+        <button class="copy-btn" id="copy-btn" onclick="copyItinerary()">Copy</button>
+        <span class="status-badge status-idle" id="status-badge">Idle</span>
+      </div>
     </div>
     <div class="result-body" id="result-body">
       <div class="empty-state" id="empty-state">
@@ -593,6 +645,20 @@
   const API_BASE = () => document.getElementById('api-url').value.trim().replace(/\/$/, '');
   const tags = [];
   let abortController = null;
+  let lastItineraryText = '';
+
+  // Node pipeline config — ordered as they appear in the active graph (rag_graph)
+  const PIPELINE_NODES = [
+    { key: 'load_memory',       label: 'Loading memory',          icon: '🧠' },
+    { key: 'supervisor',        label: 'Planning route',           icon: '🎯' },
+    { key: 'flight_agent',      label: 'Finding flights',          icon: '✈️' },
+    { key: 'hotel_agent',       label: 'Finding hotels',           icon: '🏨' },
+    { key: 'weather_agent',     label: 'Checking weather',         icon: '⛅' },
+    { key: 'aggregate_results', label: 'Aggregating results',      icon: '📊' },
+    { key: 'retrieve_context',  label: 'Retrieving travel context',icon: '📚' },
+    { key: 'itinerary_agent',   label: 'Generating itinerary',     icon: '📝' },
+    { key: 'save_memory',       label: 'Saving preferences',       icon: '💾' },
+  ];
 
   // --- Tag input ---
   const tagInput = document.getElementById('tag-input');
@@ -627,8 +693,7 @@
   }
 
   function renderTags() {
-    const existing = tagsContainer.querySelectorAll('.tag');
-    existing.forEach(t => t.remove());
+    tagsContainer.querySelectorAll('.tag').forEach(t => t.remove());
     tags.forEach((tag, i) => {
       const el = document.createElement('div');
       el.className = 'tag';
@@ -653,13 +718,10 @@
 
   // --- Validation ---
   function validate() {
-    const dest = document.getElementById('destination').value.trim();
-    const budget = document.getElementById('budget').value.trim();
-    const query = document.getElementById('query').value.trim();
-
-    if (!dest) return 'Please enter a destination.';
-    if (!budget || isNaN(parseInt(budget, 10))) return 'Please enter a valid budget.';
-    if (!query) return 'Please describe what you\'d like to know.';
+    if (!document.getElementById('destination').value.trim()) return 'Please enter a destination.';
+    const b = document.getElementById('budget').value.trim();
+    if (!b || isNaN(parseInt(b, 10))) return 'Please enter a valid budget.';
+    if (!document.getElementById('query').value.trim()) return 'Please describe what you\'d like to know.';
     if (tags.length === 0) return 'Please add at least one interest.';
     return null;
   }
@@ -678,8 +740,8 @@
   }
 
   function showError(msg) {
-    const body = document.getElementById('result-body');
-    body.innerHTML = `<div class="error-box">⚠️ ${escapeHtml(msg)}</div>`;
+    document.getElementById('result-body').innerHTML =
+      `<div class="error-box">⚠️ ${escapeHtml(msg)}</div>`;
     setStatus('error', 'Error');
   }
 
@@ -689,13 +751,59 @@
 
   function buildRequest() {
     return {
-      user_id: getOrGenerate('user-id'),
+      user_id:   getOrGenerate('user-id'),
       thread_id: getOrGenerate('thread-id'),
       destination: document.getElementById('destination').value.trim(),
-      budget: parseInt(document.getElementById('budget').value.trim(), 10),
-      interests: [...tags],
-      user_query: document.getElementById('query').value.trim(),
+      budget:      parseInt(document.getElementById('budget').value.trim(), 10),
+      interests:   [...tags],
+      user_query:  document.getElementById('query').value.trim(),
     };
+  }
+
+  // --- Copy ---
+  function copyItinerary() {
+    if (!lastItineraryText) return;
+    navigator.clipboard.writeText(lastItineraryText).then(() => {
+      const btn = document.getElementById('copy-btn');
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
+    });
+  }
+
+  // --- Pipeline builder ---
+  function buildPipeline() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'pipeline';
+    wrapper.id = 'pipeline';
+
+    const title = document.createElement('div');
+    title.className = 'pipeline-title';
+    title.textContent = 'Agent Pipeline';
+    wrapper.appendChild(title);
+
+    const steps = document.createElement('div');
+    steps.className = 'pipeline-steps';
+
+    PIPELINE_NODES.forEach(({ key, label, icon }) => {
+      const step = document.createElement('div');
+      step.className = 'step pending';
+      step.id = `step-${key}`;
+      step.innerHTML = `
+        <div class="step-icon">${icon}</div>
+        <span>${label}</span>
+      `;
+      steps.appendChild(step);
+    });
+
+    wrapper.appendChild(steps);
+    return wrapper;
+  }
+
+  function markStep(nodeKey, state) {
+    // state: 'active' | 'done'
+    const el = document.getElementById(`step-${nodeKey}`);
+    if (!el) return;
+    el.className = `step ${state}`;
   }
 
   // --- Main handler ---
@@ -708,24 +816,23 @@
 
     setLoading(true);
     setStatus('loading', 'Generating…');
+    lastItineraryText = '';
+    document.getElementById('copy-btn').classList.remove('visible');
 
     const resultBody = document.getElementById('result-body');
     resultBody.innerHTML = '';
-
-    const container = document.createElement('div');
-    container.className = 'itinerary';
-    resultBody.appendChild(container);
 
     if (abortController) abortController.abort();
     abortController = new AbortController();
 
     try {
       if (mode === 'stream') {
-        await streamPlan(body, container);
+        await streamPlan(body, resultBody);
       } else {
-        await fullPlan(body, container);
+        await fullPlan(body, resultBody);
       }
       setStatus('done', 'Done');
+      if (lastItineraryText) document.getElementById('copy-btn').classList.add('visible');
     } catch (err) {
       if (err.name !== 'AbortError') {
         showError(err.message || 'Something went wrong. Is the API running?');
@@ -736,7 +843,7 @@
   }
 
   // --- Full response ---
-  async function fullPlan(body, container) {
+  async function fullPlan(body, resultBody) {
     const res = await fetch(`${API_BASE()}/travel/plan`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -750,11 +857,21 @@
     }
 
     const data = await res.json();
-    container.innerHTML = marked.parse(data.itinerary || '');
+    const itinerary = data.itinerary || '';
+    lastItineraryText = itinerary;
+
+    const container = document.createElement('div');
+    container.className = 'itinerary';
+    container.innerHTML = marked.parse(itinerary);
+    resultBody.appendChild(container);
   }
 
   // --- Streaming response ---
-  async function streamPlan(body, container) {
+  // The /travel/plan/stream endpoint yields LangGraph node update events as SSE:
+  //   data: {"node_name": { ...state_updates }}\n\n
+  // We parse each event, update the pipeline progress, and render the itinerary
+  // when the itinerary_agent node completes.
+  async function streamPlan(body, resultBody) {
     const res = await fetch(`${API_BASE()}/travel/plan/stream`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -767,14 +884,19 @@
       throw new Error(`API error ${res.status}: ${text}`);
     }
 
+    // Build pipeline tracker
+    const pipeline = buildPipeline();
+    resultBody.appendChild(pipeline);
+
+    // Placeholder for itinerary output
+    const itineraryContainer = document.createElement('div');
+    itineraryContainer.className = 'itinerary';
+    resultBody.appendChild(itineraryContainer);
+
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
     let buffer = '';
-    let raw = '';
-
-    // Add blinking cursor
-    const cursor = document.createElement('span');
-    cursor.className = 'cursor';
+    let activeNode = null;
 
     while (true) {
       const { done, value } = await reader.read();
@@ -782,24 +904,49 @@
 
       buffer += decoder.decode(value, { stream: true });
       const lines = buffer.split('\n');
-      buffer = lines.pop(); // keep incomplete line
+      buffer = lines.pop(); // keep incomplete last line
 
       for (const line of lines) {
-        if (line.startsWith('data:')) {
-          const chunk = line.slice(5).trimStart();
-          if (chunk === '[DONE]') break;
-          raw += chunk;
-          container.innerHTML = marked.parse(raw);
-          container.appendChild(cursor);
-          // Scroll to bottom
-          const rb = document.getElementById('result-body');
-          rb.scrollTop = rb.scrollHeight;
+        if (!line.startsWith('data:')) continue;
+
+        const jsonStr = line.slice(5).trimStart();
+        if (!jsonStr || jsonStr === '[DONE]') continue;
+
+        let event;
+        try {
+          event = JSON.parse(jsonStr);
+        } catch {
+          continue;
+        }
+
+        // event is { node_name: { ...state_updates } }
+        for (const [nodeName, updates] of Object.entries(event)) {
+          // Mark previous active as done, mark this node done
+          if (activeNode && activeNode !== nodeName) markStep(activeNode, 'done');
+          markStep(nodeName, 'done');
+          activeNode = nodeName;
+
+          // Mark the next node as active if we know it
+          const idx = PIPELINE_NODES.findIndex(n => n.key === nodeName);
+          if (idx >= 0 && idx + 1 < PIPELINE_NODES.length) {
+            markStep(PIPELINE_NODES[idx + 1].key, 'active');
+          }
+
+          // Render itinerary if this node produced one
+          if (updates && updates.itinerary) {
+            lastItineraryText = updates.itinerary;
+            itineraryContainer.innerHTML = marked.parse(updates.itinerary);
+            resultBody.scrollTop = resultBody.scrollHeight;
+          }
         }
       }
     }
 
-    // Final render without cursor
-    if (raw) container.innerHTML = marked.parse(raw);
+    // Mark any remaining active step as done
+    PIPELINE_NODES.forEach(({ key }) => {
+      const el = document.getElementById(`step-${key}`);
+      if (el && el.classList.contains('active')) markStep(key, 'done');
+    });
   }
 
   // --- Clear ---
@@ -813,9 +960,10 @@
     document.getElementById('thread-id').value = '';
     tags.length = 0;
     renderTags();
+    lastItineraryText = '';
+    document.getElementById('copy-btn').classList.remove('visible');
 
-    const resultBody = document.getElementById('result-body');
-    resultBody.innerHTML = `
+    document.getElementById('result-body').innerHTML = `
       <div class="empty-state" id="empty-state">
         <div class="icon">🗺️</div>
         <h3>Your itinerary will appear here</h3>
