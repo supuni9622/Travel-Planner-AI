@@ -14,7 +14,7 @@ from langchain_huggingface import (
 
 
 loader = TextLoader(
-    "data/tokyo_guide.md"
+    "data/visa_rules.md"
 )
 
 documents = loader.load()
