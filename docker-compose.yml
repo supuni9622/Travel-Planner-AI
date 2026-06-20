@@ -39,5 +39,17 @@ services:
 
     restart: unless-stopped
 
+  mcp:
+    build:
+      context: ./travel-mcp-server
+      dockerfile: Dockerfile
+    container_name: travel-ai-mcp
+    ports:
+      - "8001:8001"
+    environment:
+      MCP_TRANSPORT: sse
+      MCP_PORT: "8001"
+    restart: unless-stopped
+
 volumes:
   postgres_data:

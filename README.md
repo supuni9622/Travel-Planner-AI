@@ -193,9 +193,11 @@ travel-planner-ai/
 | LLM Provider | Groq |
 | Validation | Pydantic |
 | API Layer | FastAPI |
+| Frontend | Vanilla HTML/JS (served by FastAPI) |
+| MCP Server | FastMCP (SSE + STDIO transport) |
+| Vector Store | ChromaDB |
 | Evaluation | LangSmith |
-| Vector Store | TBD |
-| Deployment | Docker |
+| Deployment | Docker Compose |
 | CI/CD | GitHub Actions |
 
 ---
@@ -334,74 +336,103 @@ docker build -t travel-ai .
 docker run -p 8000:8000 travel-ai
 ```
 
-# Use docker compose becuase we need to use local host for both progress and main app but we cannot do it when we use onluy dockerfile
+# Run everything with Docker Compose (recommended)
 
-## build compose
-```
+Docker Compose bundles all three services — **Frontend**, **FastAPI backend**, and **MCP server** — with a single command. PostgreSQL is included for persistent checkpointing.
+
+## Services
+
+| Service | Container | Port | What it serves |
+|---|---|---|---|
+| `api` | `travel-ai-api` | `8000` | FastAPI + Frontend (static files) |
+| `mcp` | `travel-ai-mcp` | `8001` | MCP server (SSE transport) |
+| `postgres` | `travel-ai-postgres` | `5432` | LangGraph checkpoint storage |
+
+## URLs after startup
+
+| URL | Description |
+|---|---|
+| `http://localhost:8000` | Frontend UI |
+| `http://localhost:8000/travel/plan` | Trip planning API (full response) |
+| `http://localhost:8000/travel/plan/stream` | Trip planning API (streaming SSE) |
+| `http://localhost:8000/health` | Health check |
+| `http://localhost:8001/sse` | MCP server endpoint (for AI clients) |
+
+## Build and start
+
+```bash
 docker compose build --no-cache
-```
-
-## start the applicaiton
-```
 docker compose up
 ```
 
-## or run in background 
-```
+## Run in background
+```bash
 docker compose up -d
 ```
 
 ## Verify containers
-```
+```bash
 docker compose ps
 ```
 
-## check logs
+## Check logs
 
-API
-```
+```bash
 docker compose logs -f api
-```
-Postgres
-```
+docker compose logs -f mcp
 docker compose logs -f postgres
 ```
 
 ## Stop everything
-```
+```bash
 docker compose down
 ```
 
 ### Stop and delete PostgreSQL data
-```
+```bash
 docker compose down -v
 ```
-Be careful with -v because it deletes the database volume.
+Be careful with `-v` — it deletes the database volume and all checkpoint history.
 
 ## In case we need to stop ports
-stop the process using port 5432
 
-Find what's using it:
-
+Find what's using port 5432:
+```bash
 lsof -i :5432
-
-Example output:
-
-COMMAND     PID   USER
-postgres   1234  supunimanamperi
+```
 
 Stop it:
-
+```bash
 brew services stop postgresql
-
-or:
-
-docker ps
+# or
 docker stop <container_id>
+```
 
 Then rerun:
-
+```bash
 docker compose up
+```
+
+## MCP server — local dev without Docker
+
+The MCP server also works in STDIO mode for Claude Desktop integration (no Docker needed):
+
+```bash
+cd travel-mcp-server
+python server.py
+```
+
+Claude Desktop config (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+```json
+{
+  "mcpServers": {
+    "travel-planner": {
+      "command": "python",
+      "args": ["/path/to/travel-mcp-server/server.py"]
+    }
+  }
+}
+```
 
 
 # 🗺️ Learning Roadmap

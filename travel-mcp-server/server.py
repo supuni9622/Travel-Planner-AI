@@ -80,4 +80,13 @@ def itinerary_prompt(
     """
 
 if __name__ == "__main__":
-    mcp.run()
+    import os
+    transport = os.getenv("MCP_TRANSPORT", "stdio")
+    if transport == "sse":
+        mcp.run(
+            transport="sse",
+            host="0.0.0.0",
+            port=int(os.getenv("MCP_PORT", "8001")),
+        )
+    else:
+        mcp.run()

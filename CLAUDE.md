@@ -37,14 +37,31 @@ python -m app.tests.test_streaming
 python -m app.tests.test_tools
 ```
 
-### Docker
+### Docker (all services)
 ```bash
 docker compose build --no-cache
-docker compose up          # foreground
+docker compose up          # foreground — starts api, postgres, and mcp
 docker compose up -d       # background
 docker compose down        # stop
 docker compose down -v     # stop + delete postgres volume
 ```
+
+Logs per service:
+```bash
+docker compose logs -f api
+docker compose logs -f mcp
+docker compose logs -f postgres
+```
+
+## Service URLs (when running via docker compose)
+
+| URL | Service |
+|---|---|
+| `http://localhost:8000` | Frontend UI |
+| `http://localhost:8000/travel/plan` | FastAPI — full trip plan |
+| `http://localhost:8000/travel/plan/stream` | FastAPI — SSE streaming |
+| `http://localhost:8000/health` | FastAPI — health check |
+| `http://localhost:8001/sse` | MCP server — SSE endpoint |
 
 ## Environment Variables
 
@@ -129,4 +146,10 @@ Two distinct memory mechanisms:
 
 ### MCP Server
 
-`travel-mcp-server/` is a standalone FastMCP server (`server.py`) that exposes the same tools (hotels, flights, weather) as MCP tools/resources/prompts. Has its own `requirements.txt`. Run with `python server.py` from that directory.
+`travel-mcp-server/` is a standalone FastMCP server (`server.py`) that exposes the same tools (hotels, flights, weather) as MCP tools/resources/prompts. Has its own `requirements.txt`.
+
+Transport is controlled by the `MCP_TRANSPORT` environment variable:
+- **STDIO** (default, no env var) — for Claude Desktop; run `python server.py` from `travel-mcp-server/`
+- **SSE** (`MCP_TRANSPORT=sse`) — HTTP mode used in Docker; listens on `MCP_PORT` (default `8001`)
+
+In Docker, the `mcp` service starts automatically with SSE transport and is reachable at `http://localhost:8001/sse`.
