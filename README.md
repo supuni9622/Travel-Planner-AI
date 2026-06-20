@@ -485,6 +485,10 @@ By the end of this project, I should be able to:
 
 ---
 
+# Real usage
+
+![alt text](image.png)
+
 # 👨‍💻 Author
 
 Supuni Manamperi
